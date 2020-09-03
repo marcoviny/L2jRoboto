@@ -3,32 +3,32 @@ Index: net/sf/l2j/gameserver/actor/ai/type/CreatureAI.java
 --- net/sf/l2j/gameserver/actor/ai/type/CreatureAI.java
 +++ net/sf/l2j/gameserver/actor/ai/type/CreatureAI.java
 @@ -??,?? +??,?? @@
-	@Override
-	protected void onEvtArrived()
-	{
-		_actor.revalidateZone(true);
-		
-		if (_actor.moveToNextRoutePoint())
-			return;
-		
-		if (_actor instanceof Attackable)
-			((Attackable) _actor).setIsReturningToSpawnPoint(false);
-		
-		clientStoppedMoving();
-		
-	+	// @Marcoviny Important For FakePlayers
-	+	if (_actor instanceof FakePlayer)
-	+	{
-	+		((FakePlayer) _actor).getFakeAi().setUserReachedDestination(true);
-	+	}
-	+	
-		// If the Intention was MOVE_TO, set the Intention to ACTIVE
-		if (getIntention() == CtrlIntention.MOVE_TO)
-			setIntention(CtrlIntention.ACTIVE);
-		
-		// Launch actions corresponding to the Event Think
-		onEvtThink();
-	}
+@Override
+protected void onEvtArrived()
+{
+	_actor.revalidateZone(true);
+
+	if (_actor.moveToNextRoutePoint())
+		return;
+
+	if (_actor instanceof Attackable)
+		((Attackable) _actor).setIsReturningToSpawnPoint(false);
+
+	clientStoppedMoving();
+
++	// @Marcoviny Important For FakePlayers
++	if (_actor instanceof FakePlayer)
++	{
++		((FakePlayer) _actor).getFakeAi().setUserReachedDestination(true);
++	}
++	
+	// If the Intention was MOVE_TO, set the Intention to ACTIVE
+	if (getIntention() == CtrlIntention.MOVE_TO)
+		setIntention(CtrlIntention.ACTIVE);
+
+	// Launch actions corresponding to the Event Think
+	onEvtThink();
+}
 Index: com/elfocrash/roboto/ai/FakePlayerAI.java
 ===================================================================
 --- com/elfocrash/roboto/ai/FakePlayerAI.java
